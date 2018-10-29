@@ -92,7 +92,7 @@
     <ons-page id="Tab1">
       
       <p style="text-align: center; margin-top: 10px;">
-        <ons-search-input placeholder="Search" onchange="searchPro(this.value)"></ons-search-input>
+        <ons-search-input placeholder="Search" onchange="search(this.value)"></ons-search-input>
       </p>
 
       <ons-carousel swipeable auto-scroll overscrollable id="carousel" style="height: 300px;">
@@ -253,6 +253,7 @@
 
 <script>
   getHomeData();
+  tatol();
   document.addEventListener('prechange', function (event) {
     if (event.index == 0) {
       console.log('Home clicked');
@@ -271,7 +272,7 @@
       console.log("Shopping clicked");
       var cat = localStorage.getItem('cat');
       var proD = localStorage.getItem('proD');
-      if(cat==undefined&&proD==undefined){
+      if(cat==null&&proD==null){
         getallProduct();
        
       }else if(cat!=undefined||proD!=undefined){
@@ -329,11 +330,15 @@
   function getallProduct(cat,proD) {
     if(cat==undefined&&proD==undefined){
       var apr = db.collection("Products")
+      apr.get().then(function (querySnapshot) {
+      var allP_template = $('#allP_template').html();
+      console.log(querySnapshot.docs);
+      var html = ejs.render(allP_template, { allP: querySnapshot.docs });
+      $('#allP').html(html); 
+      
+    })
     }else if(cat!=undefined&&proD==undefined){
     var apr = db.collection("Products").where("category", "==", cat); //เลือกเฉพาะ
-  }else if(proD!=undefined){
-    var apr = db.collection("Products").where("category", "==", proD)  //เหลือหา LIKE
-  }
     apr.get().then(function (querySnapshot) {
       var allP_template = $('#allP_template').html();
       console.log(querySnapshot.docs);
@@ -341,6 +346,8 @@
       $('#allP').html(html); 
       
     })
+  }
+   
   }
 
   function showDetailP() {
@@ -375,10 +382,6 @@ function SelectCat(cat){
   
 }
 
-function searchPro(proD){
-localStorage.setItem("proD",proD)
-document.getElementById('tabbar').setActiveTab(1);
-}
 
 function getDetail(getDep){
 localStorage.setItem("getDep",getDep)
@@ -414,6 +417,43 @@ function getData2cart(){
     
   })
 }
+
+function search(search) {
+  localStorage.setItem("proD",search)
+   const filterItems = (needle, heystack) => {
+    let query = needle.toLowerCase();
+    return heystack.filter(item => item.data().title.toLowerCase().indexOf(needle) >= 0);
+  }
+  var item = filterItems(search, data);
+  localStorage.setItem('items', item);
+  
+test(item);
+
+document.getElementById('tabbar').setActiveTab(1);
+  }
+  const data = []
+
+  function tatol() {
+    
+    db.collection("Products").get()
+      .then(function (querySnapshot) {
+
+        querySnapshot.docs.forEach(function (item) {
+          data.push(item)
+        
+        });
+        
+      })
+    
+  }
+
+
+function test(title){
+        var allP_template = $('#allP_template').html();
+         var html = ejs.render(allP_template, { allP: title });
+        $('#allP').html(html);
+  
+ }
 
 
 

@@ -12,25 +12,7 @@
   <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase-firestore.js"></script>
 
   <style>
-    a:link {
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    a:visited {
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    a:hover {
-      text-decoration: underline;
-      display: inline-block;
-    }
-
-    a:active {
-      text-decoration: underline;
-      display: inline-block;
-    }
+   
   </style>
   <script>
     // Initialize Firebase
@@ -94,7 +76,7 @@
       <p style="text-align: center; margin-top: 10px;">
         <ons-search-input placeholder="Search" onchange="search(this.value)"></ons-search-input>
       </p>
-
+     
       <ons-carousel swipeable auto-scroll overscrollable id="carousel" style="height: 300px;">
         <ons-carousel-item id="carousel1" style="background: url('images/1.jpg') no-repeat center; background-size: contain;">
         </ons-carousel-item>
@@ -109,13 +91,15 @@
       <script id="icon_template" type="text/template">
         <ons-row style="height:120px" vertical-align="center">  
         <% categories.forEach(function(category){%>  
-        <ons-col onclick="SelectCat('<%= category.name %>')" style="background:#66ff99; border:solid 1px white";   width="33%" >
+        <ons-col onclick="SelectCat('<%= category.name %>')" style="background-color:yellow; border:solid 1px white";   width="33%" >
+            <ons-ripple color="#bb8fce" background="#85c1e9"></ons-ripple>
           <p style="text-align: center; margin: 10px;">
             <ons-icon size="60px" icon="<%= category.icon %>"></ons-icon>          
           </p>
           <p style="text-align: center; margin: 10px;" id="icon1_text">
             <%= category.name %>
           </p>
+        
         </ons-col> 
         <%});%>
         </ons-row>
@@ -128,6 +112,7 @@
   <template id="tab2.html">
     <ons-page id="Tab2">
       <p><h5><b>Shopping Cart</b></h5></p>
+
       <div id="showDataCart"></div>
 
       <script id="cart_template" type="text/template">
@@ -146,11 +131,12 @@
           </div>
           <div class="right">
             <p style="text-align: center; margin: 10px;">
-              <ons-icon style="color: grey" size="30px" icon="md-delete"></ons-icon>
+              <ons-icon  style="color: grey" size="30px" icon="md-delete" ></ons-icon>
             </p>
           </div>
         </ons-list-item>    
       </ons-list>
+     
       <%})%>
     </script>
       <p style="text-align: center; margin: 10px;">
@@ -164,9 +150,9 @@
   <template id="tab3.html">
     <ons-page >
       <p style="text-align: center; margin-top: 10px;">
-        <ons-search-input placeholder="Search" onchange="ons.notification.alert('Searched for: ' + this.value)"></ons-search-input>
+        <ons-search-input placeholder="Search" onchange="search(this.value)"></ons-search-input>
       </p>
-      <hr>
+     
       <p><b>แบรนด์สุดฮิต</b> อัพเดทใหม่วันนี้</p>
          
           <div id="allP"></div>
@@ -176,7 +162,7 @@
       <% allP.forEach(function(allP){
         var item = allP.data();
         %>  
-        <ons-col width="100%" onclick="getDetail('<%=item.title%>');">
+        <ons-col width="50%" onclick="getDetail('<%=item.title%>');">
           <ons-card >
             <img src="<%=item.photo[0]%>" alt="Onsen UI" style="width: 100%">
             <div class="title">
@@ -272,8 +258,8 @@
       getData2cart()
     } else if (event.index == 1) {
       console.log("Shopping clicked");
-      var cat = localStorage.getItem('cat');
-      var proD = localStorage.getItem('proD');
+      var cat = localStorage.getItem('cat');   //cat คือ ค่า category ที่ได้มาจากการกด icon
+      var proD = localStorage.getItem('proD'); //proD คือ ค่าในช่อง input text ของ search
       if(cat==null&&proD==null){
         getallProduct();
        
@@ -344,21 +330,21 @@
   
   }
 
-  function addnewdata() {
-    var data = {
-      pid: 9,
-      title: 'IPhone20',
-      price: 10000,
-      category: 'electronic',
-    }
-    db.collection("Products").add(data)//ถ้าด็อกเก่าจะอัพเดท ถ้า add จะสร้างใหม่
-      .then(function (docRef) {
-        console.log("Document written with ID: ", docRef.id);
-      })
-      .catch(function (error) {
-        console.error("Error adding document: ", error);
-      });
-  }
+  // function addnewdata() {
+  //   var data = {
+  //     pid: 9,
+  //     title: 'IPhone20',
+  //     price: 10000,
+  //     category: 'electronic',
+  //   }
+  //   db.collection("Products").add(data)//ถ้าด็อกเก่าจะอัพเดท ถ้า add จะสร้างใหม่
+  //     .then(function (docRef) {
+  //       console.log("Document written with ID: ", docRef.id);
+  //     })
+  //     .catch(function (error) {
+  //       console.error("Error adding document: ", error);
+  //     });
+  // }
 function SelectCat(cat){
   localStorage.setItem("cat",cat)
     document.getElementById('tabbar').setActiveTab(1);
@@ -379,10 +365,20 @@ localStorage.setItem('quentinTarantino',add2cart);
 var retrievedData = localStorage.getItem("quentinTarantino");
 console.log(retrievedData);
 dataCart.push(retrievedData);
-alert(dataCart);
+ons.notification.toast('ADD "'+retrievedData+'" TO CART', {timeout: 2000})
 console.log(dataCart.length);
 $("#Fillbadge").attr('badge',dataCart.length);
 }
+// function del(){
+//   console.log('del')
+//   dataCart.splice(0,1 );
+//  var  delc = (dataCart.length)+1;
+//  var delcartlength = (delc)-1;
+//  console.log(delcartlength);
+//  $("#Fillbadge").attr('badge',delcartlength);
+//  $('#showDataCart').removeClass(dataCart);
+
+// }
 
 function getData2cart(){
   //var data4cart = localStorage.getItem('getDep');

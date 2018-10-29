@@ -78,11 +78,11 @@
     </ons-toolbar>
 
     <ons-tabbar id="tabbar" swipeable position="auto">
-      <ons-tab page="tab1.html" label="Home" icon="ion-home, material:md-home" badge="7" active>
+      <ons-tab page="tab1.html" label="Home" icon="ion-home, material:md-home"  active>
       </ons-tab>
       <ons-tab page="tab3.html" label="Shopping" icon="fa-shopping-cart" active-icon="fa-shopping-cart">
       </ons-tab>
-      <ons-tab page="tab2.html" label="cart" icon="fa-shopping-cart" active-icon="fa-shopping-cart">
+      <ons-tab id="Fillbadge" page="tab2.html" label="Cart" icon="fa-shopping-cart" active-icon="fa-shopping-cart" badge="">
       </ons-tab>
     </ons-tabbar>
   </ons-page>
@@ -176,9 +176,9 @@
       <% allP.forEach(function(allP){
         var item = allP.data();
         %>  
-        <ons-col width="50%" onclick="getDetail('<%=item.title%>');">
+        <ons-col width="100%" onclick="getDetail('<%=item.title%>');">
           <ons-card >
-            <img src="<%=item.photo%>" alt="Onsen UI" style="width: 100%">
+            <img src="<%=item.photo[0]%>" alt="Onsen UI" style="width: 100%">
             <div class="title">
               <%=item.title%>
             </div>
@@ -228,7 +228,7 @@
              </ons-carousel>
                 
               <div class="title">
-                <%= data.price%>
+                ฿<%= data.price%>
               </div>
               <div class="content">
                 <div>
@@ -241,10 +241,13 @@
                   <ons-list-item>React</ons-list-item>
                 </ons-list>
               </div>
-              <ons-button onclick="addtocart('<%= data.title %>')">ADD TO CART</ons-button>
-              <%})%>
+              
+             
             </ons-card>
-            
+            <div style="text-align: right; margin-right:10px;">
+                <ons-button onclick="addtocart('<%= data.title %>')">ADD TO CART</ons-button>
+              </div>
+            <%})%>
        </script>
 
     </ons-page>
@@ -253,7 +256,7 @@
 
 <script>
   getHomeData();
-  tatol();
+  searchP();
   document.addEventListener('prechange', function (event) {
     if (event.index == 0) {
       console.log('Home clicked');
@@ -263,7 +266,6 @@
       console.log(cat);
       console.log(proD);
       getHomeData();
-      
     } else if (event.index == 2) {
       console.log('Cart clicked');
       // get data for cart screen  
@@ -279,8 +281,6 @@
         getallProduct(cat,proD);
       
     } 
-
-
   }
 
   });
@@ -308,23 +308,6 @@
       console.log("Error getting document:", error);
     });
 
-  }
-
-  // function getHomeData() {
-  //   $.getJSON('home.json', function (data) {
-  //     console.log(data);
-  //     $('#appname').html(data.appname);
-  //     var style = "background: url('images/" + data.slides[0] + "') no-repeat center; background-size: contain;'";
-  //     $('#carousel1').attr('style', style)
-  //     var icon_template = $('#icon_template').html();
-  //     var html = ejs.render(icon_template, {categories : data.categories});
-  //     $('#icons').html(html);
-  //   });
-  // }
-  function getCartData() {
-    $.getJSON('cart.json', function (data) {
-      console.log(data);
-    });
   }
 
   function getallProduct(cat,proD) {
@@ -397,6 +380,8 @@ var retrievedData = localStorage.getItem("quentinTarantino");
 console.log(retrievedData);
 dataCart.push(retrievedData);
 alert(dataCart);
+console.log(dataCart.length);
+$("#Fillbadge").attr('badge',dataCart.length);
 }
 
 function getData2cart(){
@@ -433,7 +418,7 @@ document.getElementById('tabbar').setActiveTab(1);
   }
   const data = []
 
-  function tatol() {
+  function searchP() {
     
     db.collection("Products").get()
       .then(function (querySnapshot) {

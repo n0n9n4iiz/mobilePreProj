@@ -118,7 +118,7 @@
       </p>
 
       <div id="showDataCart"></div>
-
+      <div id="showprice"></div>
       <script id="cart_template" type="text/template">
       <ons-list>
         
@@ -135,7 +135,7 @@
           </div>
           <div class="right">
             <p style="text-align: center; margin: 10px;">
-              <ons-icon  style="color: grey" size="30px" icon="md-delete" onclick="delPcart('<%= numPcart %>')"></ons-icon>
+              <ons-icon  style="color: grey" size="30px" icon="md-delete" onclick="delPcart('<%= numPcart %>'); delprice('<%= cartData.price %>')"></ons-icon>
             </p>
           </div>
         </ons-list-item>    
@@ -237,7 +237,7 @@
              
             </ons-card>
             <div style="text-align: right; margin-right:10px;">
-                <ons-button onclick="addtocart('<%= data.title %>')">ADD TO CART</ons-button>
+                <ons-button onclick="addtocart('<%= data.title %>'); totalprice('<%= data.price%>')">ADD TO CART</ons-button>
               </div>
             <%})%>
        </script>
@@ -468,9 +468,27 @@
     }else{
     $("#Fillbadge").attr('badge', dataCart.length);
     }
-    alert('ลบสินค้าแล้ว');
+    ons.notification.alert('ลบสินค้าแล้ว!');
   }
+ 
+  var priceitem = 0;
 
+function totalprice(price1) {
+  var price1 = parseInt(price1, 10);
+  console.log(price1);
+
+  priceitem = priceitem + price1;
+  $('#showprice').html("<p><b>&nbsp; Total Price is : </b>" + priceitem + " ฿</p>");
+
+}
+function delprice(price2) {
+  var price2 = parseInt(price2, 10);
+  console.log(price2);
+
+  priceitem = priceitem - price2;
+  $('#showprice').html("<p><b>&nbsp; Total Price is : </b>" + priceitem + " ฿</p>");
+
+}
 
 
 

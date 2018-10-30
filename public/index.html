@@ -7,6 +7,7 @@
   <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
     crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Mitr|Rubik" rel="stylesheet">
   <script src="ejs.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase-app.js"></script>
@@ -40,6 +41,10 @@
       padding-bottom: 5px;
       padding-right: 5px;
       color: orange;
+    }
+    *{
+      font-family: 'Mitr', sans-serif;
+      font-family: 'Rubik', sans-serif;
     }
   </style>
 </head>
@@ -114,11 +119,11 @@
   <template id="tab2.html">
     <ons-page id="Tab2">
       <p>
-        <h5><b>Shopping Cart</b></h5>
+        <h5><b>รายการสินค้าในตะกร้า</b></h5>
       </p>
 
       <div id="showDataCart"></div>
-      <div id="showprice"></div>
+      <div id="showprice" class="text-align:right;"></div>
       <script id="cart_template" type="text/template">
       <ons-list>
         
@@ -131,7 +136,7 @@
           </div>
           <div class="center">
             <span class="list-item__title"><%=cartData.title%></span>
-            <span class="list-item__subtitle" style="color: blue"><%=cartData.price%></span>
+            <span class="list-item__subtitle" style="color: blue"><%=cartData.price%>฿</span>
           </div>
           <div class="right">
             <p style="text-align: center; margin: 10px;">
@@ -144,7 +149,7 @@
       <%})%>
     </script>
       <p style="text-align: center; margin: 10px;">
-        <ons-button modifier="large">PROCEED TO PAY</ons-button>
+        <ons-button modifier="large" onclick="ons.notification.confirm('ยืนยันการชำระเงิน!')">ชำระเงิน</ons-button>
       </p>
     </ons-page>
   </template>
@@ -166,14 +171,14 @@
       <% allP.forEach(function(allP){
         var item = allP.data();
         %>  
-        <ons-col width="50%" onclick="getDetail('<%=item.title%>');">
+        <ons-col width="100%" onclick="getDetail('<%=item.title%>');">
           <ons-card >
-            <img src="<%=item.photo[0]%>" alt="Onsen UI" style="width: 100%">
+            <img src="<%=item.photo[0]%>" alt="<%=item.title%>" style="width: 100%">
             <div class="title">
-              <%=item.title%>
+              <%= item.title %>
             </div>
             <div class="content" id="Pdetail">
-              Price: <%= item.price %>
+              ราคา: <%= item.price %> ฿
             </div>
           </ons-card>
         </ons-col>
@@ -198,9 +203,9 @@
       </script>
       <ons-toolbar>
         <div class="left">
-          <ons-back-button>Back</ons-back-button>
+          <ons-back-button>กลับ</ons-back-button>
         </div>
-        <div class="center">Detail</div>
+        <div class="center">รายละเอียดสินค้า</div>
       </ons-toolbar>
 
       <div id="showDep"></div>
@@ -220,24 +225,24 @@
              </ons-carousel>
                 
               <div class="title">
-                ฿<%= data.price%>
+                <%= data.price%> ฿
               </div>
               <div class="content">
                 <div>
-                  <%= data.title %>
+                  <%= data.title %> 
                 </div>
                 <ons-list>
-                  <ons-list-header>Bindings</ons-list-header>
-                  <ons-list-item>Vue</ons-list-item>
-                  <ons-list-item>Angular</ons-list-item>
-                  <ons-list-item>React</ons-list-item>
+                  <ons-list-header>Colors</ons-list-header>
+                  <ons-list-item>Red</ons-list-item>
+                  <ons-list-item>Blue</ons-list-item>
+                  <ons-list-item>Yellow</ons-list-item>
                 </ons-list>
               </div>
               
              
             </ons-card>
             <div style="text-align: right; margin-right:10px;">
-                <ons-button onclick="addtocart('<%= data.title %>'); totalprice('<%= data.price%>')">ADD TO CART</ons-button>
+                <ons-button onclick="addtocart('<%= data.title %>'); totalprice('<%= data.price%>')">เพิ่มในตะกร้า</ons-button>
               </div>
             <%})%>
        </script>
@@ -389,6 +394,7 @@
 
 
   function getData2cart() {
+    $("#Fillbadge").attr('badge', '');
     var numPcart = 0;
     //var data4cart = localStorage.getItem('getDep');
     console.log('functioncart');
@@ -478,7 +484,7 @@ function totalprice(price1) {
   console.log(price1);
 
   priceitem = priceitem + price1;
-  $('#showprice').html("<p><b>&nbsp; Total Price is : </b>" + priceitem + " ฿</p>");
+  $('#showprice').html("<p><b>&nbsp; ราคาสินค้าทั้งหมด </b>" + priceitem + " ฿</p>");
 
 }
 function delprice(price2) {
@@ -486,7 +492,7 @@ function delprice(price2) {
   console.log(price2);
 
   priceitem = priceitem - price2;
-  $('#showprice').html("<p><b>&nbsp; Total Price is : </b>" + priceitem + " ฿</p>");
+  $('#showprice').html("<p><b>&nbsp; ราคาสินค้าทั้งหมด </b>" + priceitem + " ฿</p>");
 
 }
 

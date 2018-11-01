@@ -167,11 +167,11 @@
       <div id="allP"></div>
 
       <script id="allP_template" type="text/template">
-        <ons-row style="height:180px">
+        <ons-row>
       <% allP.forEach(function(allP){
         var item = allP.data();
         %>  
-        <ons-col width="33%" onclick="getDetail('<%=item.title%>');">
+        <ons-col width="100%" onclick="getDetail('<%=item.title%>');">
           <ons-card >
             <img src="<%=item.photo[0]%>" alt="<%=item.title%>" style="width: 100%; height:100px;">
           
